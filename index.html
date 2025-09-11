@@ -118,3 +118,43 @@
   </footer>
 </body>
 </html>
+
+
+  <!-- Live auto-updating section -->
+  <section>
+    <h2>🌐 Live Events (Utsav.gov.in)</h2>
+    <ul id="utsav-events">
+      <li>Loading live events...</li>
+    </ul>
+  </section>
+
+  <script>
+    async function loadEvents() {
+      try {
+        // ⚠️ Example URL (if blocked by CORS, proxy might be needed)
+        const response = await fetch("https://utsav.gov.in/api/event?state=odisha");
+        const data = await response.json();
+
+        const eventsList = document.getElementById("utsav-events");
+        eventsList.innerHTML = "";
+
+        if (data.events && data.events.length > 0) {
+          data.events.forEach(event => {
+            const li = document.createElement("li");
+            li.innerHTML = `<a href="https://utsav.gov.in/view-event/${event.slug}" target="_blank">${event.title}</a> - ${event.start_date}`;
+            eventsList.appendChild(li);
+          });
+        } else {
+          eventsList.innerHTML = "<li>No live events found.</li>";
+        }
+      } catch (error) {
+        document.getElementById("utsav-events").innerHTML =
+          "<li>⚠️ Could not load live events (maybe API restricted).</li>";
+        console.error("Error fetching events:", error);
+      }
+    }
+
+    loadEvents();
+  </script>
+</body>
+</html>
